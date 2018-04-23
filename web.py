@@ -3,12 +3,12 @@ import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 
 
-app = Flask('Hi')
+app = Flask('DataBase')
 
 @app.route('/')
-def Hello_World():
-    return render_template('hello.html')
+def home():
+    return render_template('home.html')
     
-@app.route('/op')
-def op():
-    return render_template('op.html')
+@app.route('/student')
+def student():
+    return render_template('student.html')
