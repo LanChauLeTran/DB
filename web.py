@@ -12,3 +12,12 @@ def home():
 @app.route('/student')
 def student():
     return render_template('student.html')
+
+@app.route('/studentinfo', methods=['POST'])
+def studentinfo():
+    name = request.form['Name']
+    id = request.form['ID']
+
+    print(name + id)
+    return render_template('studentinfo.html', name=name)
+
