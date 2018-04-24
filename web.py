@@ -21,3 +21,4 @@ def studentinfo():
     print(name + id)
     return render_template('studentinfo.html', name=name)
 
+app.run()
