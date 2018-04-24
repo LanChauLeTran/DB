@@ -28,7 +28,7 @@ connection.commit()####################################################
 
 cursor.execute('CREATE TABLE Base2('###################################
         'AccountID      char(9)         REFERENCES Users(AccountiD),'
-        'ExamsSubmitted char(9)         REFERENCES EXAMS(ExamID    ,'
+        'ExamsSubmitted char(9)         REFERENCES EXAMS(ExamID)    ,'
         'PRIMARY KEY(AccountiD, ExamsSubmitted)                     '
         ');')
 conection.commit()#####################################################
@@ -87,3 +87,45 @@ connection.commit()####################################################
 cursor.execute('INSERT INTO Exams VALUES ("123456789", 1222 , "Math", "Calc 2 Exam 1", "Spring 2016")')  
 connection.commit()
 
+cursor.execute('INSERT INTO Exams VALUES ("000000000", 1120, "English", "Eng 1 Midterms", "Fall 2017")')
+connection.commit()
+
+cursor.execute('INSERT INTO Exams VALUES ("987654321", 2135, "Physics, "Physics 2 Exam 2", "Spring 2018")')
+connection.commit()
+###########################################################################################################
+cursor.execute('INSERT INTO Users VALUES ("111111111", "Johnny@gmail.com", "Johnathan", "Smith", NULL)')
+connection.commit()
+
+cursor.execute('INSERT INTO Users VALUES ("222222222", "Jeff@gmail.com", "Jeff", "Bezos", "J")')
+connection.commit()
+
+cursor.execute('INSERT INTO Users VALUES ("333333333", "Anne@gmail.com", "Anne", "Winters", "O")')
+connection.commit()
+###########################################################################################################
+cursor.execute('INSERT INTO Base1 VALUES ("111111111", 2018-04-20)')
+connection.commit()
+
+cursor.execute('INSERT INTO Base1 VALUES ("222222222", 2018-08-05)')
+connection.commit()
+
+cursor.execute('INSERT INTO Base1 VALUES ("333333333", 2018-06-09)')
+connection.commit()
+###########################################################################################################
+cursor.execute('INSERT INTO Base2 VALUES ("111111111", "000000000")')
+connection.commit()
+
+cursor.execute('INSERT INTO Base2 VALUES ("111111111", "123456789")')
+connection.commit()
+
+cursor.execute('INSERT INTO Base2 VALUES ("222222222", "987654321")')
+connection.commit()
+###########################################################################################################
+cursor.execute('INSERT INTO Mod1 VALUES ("123123123", 2018-01-01, "101010101")')
+connection.commit()
+
+cursor.execute('INSERT INTO Mod1 VALUES ("456456456", 2018-02-01, "202020202")')
+connection.commit()
+
+cursor.execute('INSERT INTO Mod1 VALUES ("789789789", 2018-06-02, "303030303")')
+connection.commit()
+###########################################################################################################
