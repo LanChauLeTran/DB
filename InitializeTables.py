@@ -31,7 +31,7 @@ cursor.execute('CREATE TABLE Base2('###################################
         'ExamsSubmitted char(9)         REFERENCES EXAMS(ExamID)    ,'
         'PRIMARY KEY(AccountiD, ExamsSubmitted)                     '
         ');')
-conection.commit()#####################################################
+connection.commit()#####################################################
 
 cursor.execute('CREATE TABLE Mod1('####################################
         'AccountID      char(9)         REFERENCES Users(AccountID),'
@@ -55,7 +55,7 @@ cursor.execute('CREATE TABLE Mod3('####################################
         'ModID          char(9)         REFERENCES Mod1(ModID)     ,'
         'PRIMARY KEY(AccountID, PendingReviews, ModID)              '
         ');')
-conection.commit()#####################################################
+connection.commit()#####################################################
 
 cursor.execute('CREATE TABLE Uni('#####################################
         'UniName char(50)       PRIMARY KEY,'
@@ -129,3 +129,47 @@ connection.commit()
 cursor.execute('INSERT INTO Mod1 VALUES ("789789789", 2018-06-02, "303030303")')
 connection.commit()
 ###########################################################################################################
+cursor.execute('INSERT INTO Mod2 VALUES ("123123123", 8, "101010101")')
+connection.commit()
+
+cursor.execute('INSERT INTO Mod2 VALUES ("456456456", 71, "202020202")')
+connection.commit()
+
+cursor.execute('INSERT INTO Mod2 VALUES ("789789789", 54, "303030303")')
+connection.commit()
+###########################################################################################################
+cursor.execute('INSERT INTO Mod3 VALUES ("123123123", 512, "101010101")')
+connection.commit()
+
+cursor.execute('INSERT INTO Mod3 VALUES ("456456456", 1, "202020202")')
+connection.commit()
+
+cursor.execute('INSERT INTO Mod3 VALUES ("789789789", 21, "303030303")')
+connection.commit()
+###########################################################################################################
+cursor.execute('INSERT INTO Uni VALUES ("MS&T", "Rolla")')
+connection.commit()
+
+cursor.execute('INSERT INTO Uni VALUES ("Mizzou", "Columiba")')
+connection.commit()
+
+cursor.execute('INSERT INTO Uni VALUES ("UMSL", "St. Louis")')
+connection.commit()
+###########################################################################################################
+cursor.execute('INSERT INTO Attends VALUES ("111111111", "MS&T", "Senior")')
+connection.commit()
+
+cursor.execute('INSERT INTO Attends VALUES ("22222222","Mizzou", "Junior")')
+connection.commit()
+
+cursor.execute('INSERT INTO Attends VALUES ("333333333","UMSL", "Freshman")')
+connection.commit()
+###########################################################################################################
+cursor.execute('INSERT INTO Instructors VALUES ("Kim", "Possible" , "MS&T", "111111111")')
+connection.commit()
+
+cursor.execute('INSERT INTO Instructors VALUES ("Timmy", "Turner" ,"Mizzou", "222222222")')
+connection.commit()
+
+cursor.execute('INSERT INTO Instructors VALUES ("Scooby", "Doo", "UMSL", "333333333")')
+connection.commit()
