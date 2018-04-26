@@ -2,7 +2,8 @@ import sqlite3
 connection = sqlite3.connect("data.db")
 cursor = connection.cursor()
 
-cursor.execute('CREATE TABLE Exams('###################################
+
+cursor.execute('CREATE TABLE IF NOT EXISTS [Exams]('###################################
         'ExamID         char(9)         PRIMARY KEY,'
         'CourseNum      int             NOT NULL   ,'
         'Subj           char(20)        NOT NULL   ,'
@@ -11,7 +12,7 @@ cursor.execute('CREATE TABLE Exams('###################################
         ');')
 connection.commit()####################################################
 
-cursor.execute('CREATE TABLE Users('###################################
+cursor.execute('CREATE TABLE IF NOT EXISTS [Users]('###################################
         'AccountID      char(9)         PRIMARY KEY,'
         'Email          char(50)                   ,'
         'Fname          char(20)                   ,'
@@ -20,20 +21,20 @@ cursor.execute('CREATE TABLE Users('###################################
         ');')
 connection.commit()####################################################
 
-cursor.execute('CREATE TABLE Base1('###################################
+cursor.execute('CREATE TABLE IF NOT EXISTS [Base1]('###################################
         'AccountID  char(9)  PRIMARY KEY  REFERENCES Users(AccountID),'
         'Datejoined date                                              '
         ');')
 connection.commit()####################################################
 
-cursor.execute('CREATE TABLE Base2('###################################
+cursor.execute('CREATE TABLE IF NOT EXISTS [Base2]('###################################
         'AccountID      char(9)         REFERENCES Users(AccountiD),'
         'ExamsSubmitted char(9)         REFERENCES EXAMS(ExamID)    ,'
         'PRIMARY KEY(AccountiD, ExamsSubmitted)                     '
         ');')
 connection.commit()#####################################################
 
-cursor.execute('CREATE TABLE Mod1('####################################
+cursor.execute('CREATE TABLE IF NOT EXISTS [Mod1]('####################################
         'AccountID      char(9)         REFERENCES Users(AccountID),'
         'DateVerified   date                                       ,'
         'ModID          char(9)                                    ,'
@@ -41,15 +42,15 @@ cursor.execute('CREATE TABLE Mod1('####################################
         ');')
 connection.commit()####################################################
 
-cursor.execute('CREATE TABLE Mod2('####################################
+cursor.execute('CREATE TABLE IF NOT EXISTS [Mod2]('####################################
         'AccountID      char(9)         REFERENCES Users(AccountID),'
         'ExamsReviewed  char(9)         REFERENCES Exams(ExamID)   ,'
         'ModID          char(9)         REFERENCES Mod1(ModID)     ,'
-        'PRIMARY KEY(AccountID, ExamsReviewd, ModID)                '
+        'PRIMARY KEY(AccountID, ExamsReviewed, ModID)                '
         ');')
 connection.commit()####################################################
 
-cursor.execute('CREATE TABLE Mod3('####################################
+cursor.execute('CREATE TABLE IF NOT EXISTS [Mod3]('####################################
         'AccountID      char(9)         REFERENCES Users(AccountID),'
         'PendingReviews char(9)         REFERENCES Exams(ExamID)   ,'
         'ModID          char(9)         REFERENCES Mod1(ModID)     ,'
@@ -57,13 +58,13 @@ cursor.execute('CREATE TABLE Mod3('####################################
         ');')
 connection.commit()#####################################################
 
-cursor.execute('CREATE TABLE Uni('#####################################
+cursor.execute('CREATE TABLE IF NOT EXISTS [Uni]('#####################################
         'UniName char(50)       PRIMARY KEY,'
         'Loc     char(50)                   '
         ');')
 connection.commit()####################################################
 
-cursor.execute('CREATE TABLE Attends('#################################
+cursor.execute('CREATE TABLE IF NOT EXISTS [Attends]('#################################
         'AccountID      char(9)         REFERENCES Users(AccountID),'
         'UniName        char(50)        REFERENCES Uni(UniName)    ,'
         'Stat           char(20)                                   ,'
@@ -71,7 +72,7 @@ cursor.execute('CREATE TABLE Attends('#################################
         ');')
 connection.commit()####################################################
 
-cursor.execute('CREATE TABLE Instructors('#############################
+cursor.execute('CREATE TABLE IF NOT EXISTS [Instructors]('#############################
         'Fname          char(20)                                ,'
         'Lname          char(20)                                ,'
         'UniName        char(20)        REFERENCES Uni(UniName) ,'
@@ -83,14 +84,14 @@ connection.commit()####################################################
 
 #################### START OF INSERTING DATA ##########################
 
-### Insert into Exams ###
+### Insert into Exams ##### 
 cursor.execute('INSERT INTO Exams VALUES ("123456789", 1222 , "Math", "Calc 2 Exam 1", "Spring 2016")')  
 connection.commit()
 
 cursor.execute('INSERT INTO Exams VALUES ("000000000", 1120, "English", "Eng 1 Midterms", "Fall 2017")')
 connection.commit()
 
-cursor.execute('INSERT INTO Exams VALUES ("987654321", 2135, "Physics, "Physics 2 Exam 2", "Spring 2018")')
+cursor.execute('INSERT INTO Exams VALUES ("987654321", 2135, "Physics", "Physics 2 Exam 2", "Spring 2018")')
 connection.commit()
 ###########################################################################################################
 cursor.execute('INSERT INTO Users VALUES ("111111111", "Johnny@gmail.com", "Johnathan", "Smith", NULL)')
