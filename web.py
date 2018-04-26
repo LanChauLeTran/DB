@@ -7,11 +7,31 @@ app = Flask('DataBase')
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return "Welcome! <a href='/logout'>Logout</a>"
+
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    if request.form['password'] == 'password' and request.form['username'] == 'admin':
+        session['logged_in'] = True
+    else:
+        flash('wrong password!')
+    return home()
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return home()
     
 @app.route('/student')
 def student():
     return render_template('student.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/studentinfo', methods=['POST'])
 def studentinfo():
