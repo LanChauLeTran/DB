@@ -28,8 +28,10 @@ def studentinfo():
 
 @app.route('/upload', methods = ['POST', 'GET'])
 def upload():
+    connection = sqlite3.connect("data.db")
+    cursor = connection.cursor()
     file = request.files['inputFile']
-    Coursenum = request.form['CourseNum']
+    Coursenum = int(request.form['CourseNum'])
     Subject = request.form['Subject']
     Exam_title = request.form['ExamTitle']
     Semester = request.form['Semester']
@@ -38,14 +40,16 @@ def upload():
     elif (file.filename == ''):
         flash('No selected file')
     else:
-        filename = secure_filename(file.filename)
-        if(filename[-4] == "."):
-            extension = filename[-4:]
+        Filename = secure_filename(file.filename)
+        if(Filename[-4] == "."):
+            extension = Filename[-4:]
         else: 
-            extension = filename[-5:]
-        filename = str(random.randint(1,999999999)) + extension
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
-        #cursor.execute('INSERT INTO Exams VALUES (Filename, Coursenum, Subject, Exam_title, Semester)')
-        #connection.commit()
+            extension = Filename[-5:]
+        Filename1 = str(random.randint(1,999999999))
+        Filename2 = Filename1 + extension
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], Filename2)) 
+        cursor.execute("""INSERT INTO Exams (ExamID,CourseNum,Subj,ExamTitle,Semester)
+        VALUES (?,?,?,?,?)""",(Filename1, Coursenum, Subject, Exam_title, Semester))
+        connection.commit()
     return render_template('studentinfo.html')
 app.run()

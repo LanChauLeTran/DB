@@ -4,79 +4,79 @@ cursor = connection.cursor()
 
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Exams]('###################################
-        'ExamID         char(9)         PRIMARY KEY,'
+        'ExamID         varchar         PRIMARY KEY,'
         'CourseNum      int             NOT NULL   ,'
-        'Subj           char(20)        NOT NULL   ,'
-        'ExamTitle      char(50)                   ,'
-        'Semester       char(10)        NOT NULL    '
+        'Subj           varchar        NOT NULL   ,'
+        'ExamTitle      varchar        NOT NULL   ,'
+        'Semester       varchar       NOT NULL    '
         ');')
 connection.commit()####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Users]('###################################
-        'AccountID      char(9)         PRIMARY KEY,'
-        'Email          char(50)                   ,'
-        'Fname          char(20)                   ,'
-        'Lname          char(20)                   ,'
-        'Mname          char(1)                     '
+        'AccountID      varchar         PRIMARY KEY,'
+        'Email          varchar                  ,'
+        'Fname          varchar                  ,'
+        'Lname          varchar                  ,'
+        'Mname          varchar                     '
         ');')
 connection.commit()####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Base1]('###################################
-        'AccountID  char(9)  PRIMARY KEY  REFERENCES Users(AccountID),'
+        'AccountID  varchar  PRIMARY KEY  REFERENCES Users(AccountID),'
         'Datejoined date                                              '
         ');')
 connection.commit()####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Base2]('###################################
-        'AccountID      char(9)         REFERENCES Users(AccountiD),'
-        'ExamsSubmitted char(9)         REFERENCES EXAMS(ExamID)    ,'
+        'AccountID      varchar         REFERENCES Users(AccountiD),'
+        'ExamsSubmitted varchar         REFERENCES EXAMS(ExamID)    ,'
         'PRIMARY KEY(AccountiD, ExamsSubmitted)                     '
         ');')
 connection.commit()#####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Mod1]('####################################
-        'AccountID      char(9)         REFERENCES Users(AccountID),'
+        'AccountID      varchar        REFERENCES Users(AccountID),'
         'DateVerified   date                                       ,'
-        'ModID          char(9)                                    ,'
+        'ModID          varchar                                    ,'
         'PRIMARY KEY(AccountID, ModID)                              '
         ');')
 connection.commit()####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Mod2]('####################################
-        'AccountID      char(9)         REFERENCES Users(AccountID),'
-        'ExamsReviewed  char(9)         REFERENCES Exams(ExamID)   ,'
-        'ModID          char(9)         REFERENCES Mod1(ModID)     ,'
+        'AccountID      varchar         REFERENCES Users(AccountID),'
+        'ExamsReviewed  varchar         REFERENCES Exams(ExamID)   ,'
+        'ModID          varchar         REFERENCES Mod1(ModID)     ,'
         'PRIMARY KEY(AccountID, ExamsReviewed, ModID)                '
         ');')
 connection.commit()####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Mod3]('####################################
-        'AccountID      char(9)         REFERENCES Users(AccountID),'
-        'PendingReviews char(9)         REFERENCES Exams(ExamID)   ,'
-        'ModID          char(9)         REFERENCES Mod1(ModID)     ,'
+        'AccountID      varchar         REFERENCES Users(AccountID),'
+        'PendingReviews varchar         REFERENCES Exams(ExamID)   ,'
+        'ModID          varchar         REFERENCES Mod1(ModID)     ,'
         'PRIMARY KEY(AccountID, PendingReviews, ModID)              '
         ');')
 connection.commit()#####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Uni]('#####################################
-        'UniName char(50)       PRIMARY KEY,'
-        'Loc     char(50)                   '
+        'UniName varchar       PRIMARY KEY,'
+        'Loc     varchar                   '
         ');')
 connection.commit()####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Attends]('#################################
-        'AccountID      char(9)         REFERENCES Users(AccountID),'
-        'UniName        char(50)        REFERENCES Uni(UniName)    ,'
-        'Stat           char(20)                                   ,'
+        'AccountID      varchar        REFERENCES Users(AccountID),'
+        'UniName        varchar        REFERENCES Uni(UniName)    ,'
+        'Stat           varchar                                   ,'
         'PRIMARY KEY(AccountID, UniName)                            '
         ');')
 connection.commit()####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Instructors]('#############################
-        'Fname          char(20)                                ,'
-        'Lname          char(20)                                ,'
-        'UniName        char(20)        REFERENCES Uni(UniName) ,'
-        'ExamID         char(9)         REFERENCES Exams(ExamID),'
+        'Fname          varchar                                ,'
+        'Lname          varchar                                ,'
+        'UniName        varchar        REFERENCES Uni(UniName) ,'
+        'ExamID         varchar        REFERENCES Exams(ExamID),'
         'PRIMARY KEY(Fname, Lname, UniName, ExamID)              '
         ');')
 connection.commit()####################################################
