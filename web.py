@@ -1,7 +1,7 @@
 import os
 import sqlite3
 import random
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, send_file
 from werkzeug.utils import secure_filename
 from os import path
 
@@ -59,19 +59,19 @@ def upload():
             flash('There is not extenstion for this file')
             return render_template('studentinfo.html')
         lstring = len(Filename)
-        extension = Filename[(lstring - dot) * -1 :]
+        Extension = Filename[(lstring - dot) * -1 :]
         Ecount = 7
         for i in ALLOWED_EXTENSIONS:
-            if i != extension:
+            if i != Extension:
                 Ecount = Ecount - 1
         if Ecount == 0:
             flash('File type is not allow')
             return render_template('studentinfo.html')
         Filename1 = str(random.randint(1,999999999))
-        Filename2 = Filename1 + extension
+        Filename2 = Filename1 + Extension
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], Filename2)) 
-        cursor.execute("""INSERT INTO Exams (ExamID,CourseNum,Subj,ExamTitle,Semester)
-        VALUES (?,?,?,?,?)""",(Filename1, Coursenum, Subject, Exam_title, Semester))
+        cursor.execute("""INSERT INTO Exams (ExamID,CourseNum,Subj,ExamTitle,Semester,Extension)
+        VALUES (?,?,?,?,?,?)""",(Filename1, Coursenum, Subject, Exam_title, Semester, Extension))
         connection.commit()
     return render_template('studentinfo.html')
 
@@ -94,12 +94,15 @@ def display_exam():
     RExam_title = request.form['RExamTitle']
     RSemester = request.form['RSemester']
     print (RCoursenum, RSubject, RExam_title, RSemester)
-    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester
+    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
                       FROM Exams E
                       WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester= ?""",(RCoursenum, RSubject, RExam_title, RSemester))
     Rexams = cursor.fetchall()
     return render_template('display.html', Rexams=Rexams)
 
+@app.route('/return-file/<ID>', methods=['GET', 'POST'])
+def return_file(ID):
+    return send_file(os.path.join(app.root_path, 'downloads', ID))
 
 
 app.run()

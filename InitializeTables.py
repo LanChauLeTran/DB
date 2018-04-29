@@ -8,7 +8,8 @@ cursor.execute('CREATE TABLE IF NOT EXISTS [Exams]('############################
         'CourseNum      int             NOT NULL   ,'
         'Subj           varchar        NOT NULL   ,'
         'ExamTitle      varchar        NOT NULL   ,'
-        'Semester       varchar       NOT NULL    '
+        'Semester       varchar       NOT NULL    ,'
+        'Extension     varchar       NOT NULL'
         ');')
 connection.commit()####################################################
 
@@ -85,13 +86,13 @@ connection.commit()####################################################
 #################### START OF INSERTING DATA ##########################
 
 ### Insert into Exams ##### 
-cursor.execute('INSERT INTO Exams VALUES ("123456789", 1222 , "Math", "Calc 2 Exam 1", "Spring 2016")')  
+cursor.execute('INSERT INTO Exams VALUES ("123456789", 1222 , "Math", "Calc 2 Exam 1", "Spring 2016","pdf")')  
 connection.commit()
 
-cursor.execute('INSERT INTO Exams VALUES ("000000000", 1120, "English", "Eng 1 Midterms", "Fall 2017")')
+cursor.execute('INSERT INTO Exams VALUES ("000000000", 1120, "English", "Eng 1 Midterms", "Fall 2017","pdf")')
 connection.commit()
 
-cursor.execute('INSERT INTO Exams VALUES ("987654321", 2135, "Physics", "Physics 2 Exam 2", "Spring 2018")')
+cursor.execute('INSERT INTO Exams VALUES ("987654321", 2135, "Physics", "Physics 2 Exam 2", "Spring 2018","pdf")')
 connection.commit()
 ###########################################################################################################
 cursor.execute('INSERT INTO Users VALUES ("111111111", "Johnny@gmail.com", "Johnathan", "Smith", NULL)')
