@@ -74,4 +74,32 @@ def upload():
         VALUES (?,?,?,?,?)""",(Filename1, Coursenum, Subject, Exam_title, Semester))
         connection.commit()
     return render_template('studentinfo.html')
+
+@app.route('/request', methods = ['POST', 'GET'])
+def request_exam():
+    return render_template('request.html')
+
+@app.route('/display', methods = ['POST', 'GET'])
+def display_exam():
+    
+    connection = sqlite3.connect("data.db")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    RCoursenumS = request.form['RCourseNum']
+    if(RCoursenumS ==''):
+        RCoursenum = 0
+    else:
+        RCoursenum = int(RCoursenumS)
+    RSubject = request.form['RSubject']
+    RExam_title = request.form['RExamTitle']
+    RSemester = request.form['RSemester']
+    print (RCoursenum, RSubject, RExam_title, RSemester)
+    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester
+                      FROM Exams E
+                      WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester= ?""",(RCoursenum, RSubject, RExam_title, RSemester))
+    Rexams = cursor.fetchall()
+    return render_template('display.html', Rexams=Rexams)
+
+
+
 app.run()
