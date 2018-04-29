@@ -39,8 +39,20 @@
         <div class="topnav">
             <a href="/">Home</a>
             <a href="/student">Students</a>
+        </div>:
+        <div class="container-fluid" style="min-height:100% width:100%">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+              <div class ="alert alert-warning alert dismissible" role = "alert">
+                {{message}}
+              </div>
+              {% endfor %}
+            {% endif %}
+        {% endwith %}
     
         </div> 
+        
         {% block body %}
         {% endblock %} 
     </body>

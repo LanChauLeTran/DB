@@ -6,8 +6,9 @@ from werkzeug.utils import secure_filename
 from os import path
 
 UPLOAD_FOLDER ='downloads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'docx'])
+ALLOWED_EXTENSIONS = set(['.txt', '.pdf', '.png', '.jpg', '.jpeg', '.gif', '.docx'])
 app = Flask('DataBase')
+app.secret_key = 'secret'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
@@ -30,21 +31,42 @@ def studentinfo():
 def upload():
     connection = sqlite3.connect("data.db")
     cursor = connection.cursor()
+    counter = 0
+    dot = -1
+    if 'inputFile' not in request.files:
+            flash('No selected file')
+            return render_template('studentinfo.html')
     file = request.files['inputFile']
-    Coursenum = int(request.form['CourseNum'])
+    CoursenumS = request.form['CourseNum']
+    if(CoursenumS ==''):
+        Coursenum = 0
+    else:
+        Coursenum = int(CoursenumS)
     Subject = request.form['Subject']
     Exam_title = request.form['ExamTitle']
     Semester = request.form['Semester']
-    if (Coursenum == '' or Subject == '' or Semester == ''):
+ 
+    if (Coursenum == 0 or Subject == '' or Semester == ''):
         flash('Course Number, Subject, or Semester can not be blank')
-    elif (file.filename == ''):
-        flash('No selected file')
     else:
         Filename = secure_filename(file.filename)
-        if(Filename[-4] == "."):
-            extension = Filename[-4:]
-        else: 
-            extension = Filename[-5:]
+        for i in Filename:
+            if i == '.' :
+                dot = counter
+            else:
+                counter = counter + 1 
+        if(dot == -1):
+            flash('There is not extenstion for this file')
+            return render_template('studentinfo.html')
+        lstring = len(Filename)
+        extension = Filename[(lstring - dot) * -1 :]
+        Ecount = 7
+        for i in ALLOWED_EXTENSIONS:
+            if i != extension:
+                Ecount = Ecount - 1
+        if Ecount == 0:
+            flash('File type is not allow')
+            return render_template('studentinfo.html')
         Filename1 = str(random.randint(1,999999999))
         Filename2 = Filename1 + extension
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], Filename2)) 
