@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<table border = 1>
+    <thead>
+       <td>ExamID</td>
+       <td>Course Number</td>
+       <td>Subject</td>
+       <td>Exam Title</td>
+       <td>Semester</td>
+    </thead>
+    {% for Rexam in Rexams %}
+    <tr>
+       <td>{{Rexam["ExamID"]}}</td>
+       <td>{{Rexam["CourseNum"]}}</td>
+       <td>{{Rexam["Subj"]}}</td>
+       <td>{{Rexam["ExamTitle"]}}</td>
+       <td>{{Rexam["Semester"]}}</td>
+    </tr>
+    {% endfor %}
+</table>
+    
+{% for Rexam in Rexams %}
+    <form method="POST" action ="/Modify/{{Rexam["ExamID"]}}" enctype=multipart/form-data>
+        Course Number:<br>
+        <input type="text" name="CourseNum"><br>
+        Subject:<br>
+        <input type="text" name="Subject"><br>
+        Exam Title:<br>
+        <input type="text" name="ExamTitle"><br>
+        Semester:<br>
+        <input type="text" name="Semester"><br>
+         <input type=submit value=Submit>
+    </form>
+{% endfor %}
+{% endblock %}

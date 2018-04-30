@@ -79,6 +79,10 @@ def upload():
 def request_exam():
     return render_template('request.html')
 
+@app.route('/modrequest', methods = ['POST', 'GET'])
+def modrequest_exam():
+    return render_template('modrequest.html')
+
 @app.route('/display', methods = ['POST', 'GET'])
 def display_exam():
     
@@ -103,6 +107,76 @@ def display_exam():
 @app.route('/return-file/<ID>', methods=['GET', 'POST'])
 def return_file(ID):
     return send_file(os.path.join(app.root_path, 'downloads', ID))
+
+@app.route('/displaymod', methods = ['POST', 'GET'])
+def Mdisplay_exam():
+    
+    connection = sqlite3.connect("data.db")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    RCoursenumS = request.form['RCourseNum']
+    if(RCoursenumS ==''):
+        RCoursenum = 0
+    else:
+        RCoursenum = int(RCoursenumS)
+    RSubject = request.form['RSubject']
+    RExam_title = request.form['RExamTitle']
+    RSemester = request.form['RSemester']
+    print (RCoursenum, RSubject, RExam_title, RSemester)
+    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
+                      FROM Exams E
+                      WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester= ?""",(RCoursenum, RSubject, RExam_title, RSemester))
+    Rexams = cursor.fetchall()
+    return render_template('Mdisplay.html', Rexams=Rexams)
+
+@app.route('/ModifyB/<ID>', methods = ['POST', 'GET'])
+def ModifyB(ID):
+    print(ID)
+    connection = sqlite3.connect("data.db")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
+                      FROM Exams E
+                      WHERE E.ExamID = %s"""%(ID))
+    Rexams = cursor.fetchall()
+    return render_template('ModifyB.html', Rexams=Rexams)
+
+@app.route('/Modify/<ID>', methods = ['POST', 'GET'])
+def Modify(ID):
+    print(ID)
+    connection = sqlite3.connect("data.db")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
+                      FROM Exams E
+                      WHERE E.ExamId = %s"""%(ID))
+    Rexam = cursor.fetchone()
+    CoursenumS = request.form['CourseNum']
+    if(CoursenumS ==''):
+        CoursenumS = Rexam["CourseNum"]
+    Subject = request.form['Subject']
+    if(Subject ==''):
+        Subject = Rexam["Subj"]
+    Exam_title = request.form['ExamTitle']
+    if(Exam_title ==''):
+        Exam_title = Rexam["ExamTitle"]
+    Semester = request.form['Semester']
+    if(Semester ==''):
+        Semester = Rexam["Semester"]
+    Extension = Rexam["Extension"]
+    print('ASDASDASDHASJDHASKJ')
+    print(Rexam["Subj"])
+    cursor.execute("""DELETE FROM Exams
+                    WHERE Exams.ExamID = %s""" % (ID))
+    connection.commit()
+    cursor.execute("""INSERT INTO Exams (ExamID,CourseNum,Subj,ExamTitle,Semester,Extension)
+    VALUES (?,?,?,?,?,?)""",(ID, CoursenumS, Subject, Exam_title, Semester, Extension))
+    connection.commit()
+    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
+                FROM Exams E
+                WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester= ?""",(CoursenumS, Subject, Exam_title, Semester))
+    Rexams = cursor.fetchall()
+    return render_template('Mdisplay.html', Rexams=Rexams)
 
 
 app.run()

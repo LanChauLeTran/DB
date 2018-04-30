@@ -19,12 +19,8 @@
            <td>{{Rexam["ExamTitle"]}}</td>
            <td>{{Rexam["Semester"]}}</td>
            <td><a href="/return-file/{{Rexam["ExamID"]}}{{Rexam["Extension"]}}" target="blank"><button class ='btn btn-default'>Open File</button></a></td>
-           <td><a href="/ModifyB/{{Rexam["ExamID"]}}/{{Rexam["CourseNum"]}}{{Rexam["Subj"]}}/{{Rexam["ExamTitle"]}}{{Rexam["Semester"]}}/{{Rexam["Extension"]}}
-            /" target="blank"><button class ='btn btn-default'>Modify</button></a></td>
+           <td><a href="/ModifyB/{{Rexam["ExamID"]}}" target="blank"><button class ='btn btn-default'>Modify</button></a></td>
         </tr>
      {% endfor %}
-      
-     
-
   </table>
 {% endblock %}
