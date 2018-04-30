@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <p>
+      Hello {{name}} <br>
+      Please fill in the following information to upload an Exam
+    </p>
+    <form method="POST" action ="/mupload" enctype=multipart/form-data>
+      Course Number:<br>
+      <input type="text" name="CourseNum"><br>
+      Subject:<br>
+      <input type="text" name="Subject"><br>
+      Exam Title:<br>
+      <input type="text" name="ExamTitle"><br>
+      Semester:<br>
+      <input type="text" name="Semester"><br>
+      <input type=file name=inputFile>
+      <input type=submit value=Submit>
+    </form>
+{% endblock %}
