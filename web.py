@@ -23,6 +23,10 @@ def about():
 def student():
     return render_template('student.html')
 
+@app.route('/mod')
+def mod():
+    return render_template('mod.html')
+
 @app.route('/upload', methods = ['POST', 'GET'])
 def upload():
     connection = sqlite3.connect("data.db")
