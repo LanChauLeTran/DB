@@ -15,6 +15,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def home():
     return render_template('home.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+    
 @app.route('/student')
 def student():
     return render_template('student.html')
