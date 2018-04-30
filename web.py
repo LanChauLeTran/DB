@@ -133,7 +133,7 @@ def upload():
         cursor.execute("""INSERT INTO Exams (ExamID,CourseNum,Subj,ExamTitle,Semester,Extension)
         VALUES (?,?,?,?,?,?)""",(Filename1, Coursenum, Subject, Exam_title, Semester, Extension))
         connection.commit()
-    return render_template('upload.html')
+    return upload()
 
 @app.route('/request', methods = ['POST', 'GET'])
 def request_exam():

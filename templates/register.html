@@ -3,30 +3,38 @@
 
 
 {% block body %}
-<p>
-Please enter the following information to register as an user
-</p>
-  <form action = "{{ url_for('registered') }}" method = "post">
-    Username:<br>
-    <input type="text" name="un"><br>
-    First Name:<br>
-    <input type="text" name="fn"><br>
-    Middle Name:<br>
-    <input type="text" name="mn"><br>
-    Last Name:<br>
-    <input type="text" name="ln"><br>
-    Password:<br>
-    <input type="text" name="pw"><br>
-    Email:<br>
-    <input type="text" name="em"><br>
-    University:<br>
-    <input type="text" name="uni"><br>
-    University Location:<br>
-    <input type="text" name="loc"><br>
-    Your Status of University<br>
-    <input type="text" name="stat"><br>
-    <input type="submit" value="Submit">
-  </form> 
+  <div style="float: right; margin-right: 200px">
+    <h3>
+      Enter the requested information to register.
+    </h3>
+  </div>
 
+  <div style="margin-left: 250px;">
+    <form action = "{{ url_for('registered') }}" method = "post">
+      Username:<br>
+      <input type="text" name="un"><br>
+      First Name:<br>
+      <input type="text" name="fn"><br>
+      Middle Name:<br>
+      <input type="text" name="mn"><br>
+      Last Name:<br>
+      <input type="text" name="ln"><br>
+      Password:<br>
+      <input type="text" name="pw"><br>
+      Email:<br>
+      <input type="text" name="em"><br>
+      University:<br>
+      <input type="text" name="uni"><br>
+      University Location:<br>
+      <input type="text" name="loc"><br>
+      Your Status of University<br>
+      <input type="text" name="stat"><br>
+      <p>
+        
+      </p>
+      <input type="submit" value="Submit">
+    </form> 
+  </div>
+    
 {% endblock %}
 
