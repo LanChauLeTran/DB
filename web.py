@@ -63,6 +63,7 @@ def login():
 @app.route('/log', methods = ['POST', 'GET'])
 def log():
     Accountid = request.form['UN']
+    Password = request.form['PW']
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
@@ -74,6 +75,8 @@ def log():
                       FROM Mod1 M
                       WHERE M.AccountID = '%s' """%(Accountid))
     mo = cursor.fetchone()
+    if Password == '':
+        return redirect("login")
     try:
         if us['AccountID'] != "":
             flash('You have successfully login')
@@ -85,7 +88,7 @@ def log():
                 return redirect("/mupload")
         except:
             flash('Username not found or Password is incorrect')
-            return render_template('login.html')
+            return redirect("/login")
 
 @app.route('/upload', methods = ['POST', 'GET'])
 def upload():
