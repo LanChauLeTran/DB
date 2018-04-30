@@ -1,15 +1,23 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <form method="POST" action ="/displaymod" enctype=multipart/form-data>
-    Course Number:<br>
-    <input type="text" name="RCourseNum"><br>
-    Subject:<br>
-    <input type="text" name="RSubject"><br>
-    Exam Title:<br>
-    <input type="text" name="RExamTitle"><br>
-    Semester:<br>
-    <input type="text" name="RSemester"><br>
-    <input type=submit value=Submit>
-  </form>
-{% endblock %}
+  <div style="float: right; margin-right: 200px">
+    <h3>
+      Enter the requested information to search for desired exam.
+    </h3>
+  </div>
+  
+  <div style="margin-left: 250px; margin-top:300px">
+    <form method="POST" action ="/displaymod" enctype=multipart/form-data>
+      Course Number:<br>
+      <input type="text" name="RCourseNum"><br>
+      Subject:<br>
+      <input type="text" name="RSubject"><br>
+      Exam Title:<br>
+      <input type="text" name="RExamTitle"><br>
+      Semester:<br>
+      <input type="text" name="RSemester"><br>
+      <input type=submit value=Submit>
+    </form>
+  {% endblock %}
+  </div>

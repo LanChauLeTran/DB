@@ -1,20 +1,98 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <p>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    body {
+        font-family: "ariel";
+    }
+
+    .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        right: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+
+    .sidenav a:hover {
+        color: #f1f1f1;
+    }
+
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    @media screen and (max-height: 450px) {
+      .sidenav {padding-top: 15px;}
+      .sidenav a {font-size: 18px;}
+    }
+    </style>
+  </head>
+
+  <body>
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <a href="/modrequest">MOD SEARCH</a>
+    </div>
+
+    <span style="float:right;font-size:30px;cursor:pointer;margin-right:250px" onclick="openNav()">&#9776; open mod menu</span>
+
+    <script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+    </script>
+  </body>
+
+  <div style="margin-left: 250px">
+    <h3>
       Hello {{name}} <br>
-      Please fill in the following information to upload an Exam
+      Please fill in the following information to upload an Exam.
+    </h3>
+  </div>
+
+  <div style="margin-left: 250px; margin-top: 50px">
+  <form method="POST" action ="/mupload" enctype=multipart/form-data>
+    Course Number:<br>
+    <input type="text" name="CourseNum"><br>
+    Subject:<br>
+    <input type="text" name="Subject"><br>
+    Exam Title:<br>
+    <input type="text" name="ExamTitle"><br>
+    Semester:<br>
+    <input type="text" name="Semester"><br>
+    <p>
+
     </p>
-    <form method="POST" action ="/mupload" enctype=multipart/form-data>
-      Course Number:<br>
-      <input type="text" name="CourseNum"><br>
-      Subject:<br>
-      <input type="text" name="Subject"><br>
-      Exam Title:<br>
-      <input type="text" name="ExamTitle"><br>
-      Semester:<br>
-      <input type="text" name="Semester"><br>
-      <input type=file name=inputFile>
-      <input type=submit value=Submit>
-    </form>
+    <input type=file name=inputFile>
+    <p>
+
+    </p>
+    <input type=submit value=Submit>
+  </form>
+  </div>
 {% endblock %}
