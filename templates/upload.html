@@ -1,10 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <p>
+  <div style="float:right; margin-right: 200px">
+    <h3>
       Hello {{name}} <br>
-      Please fill in the following information to upload an Exam
-    </p>
+      Please fill in the following information to upload an Exam.
+    </h3>
+  </div>
+
+  <div style="margin-left: 250px; margin-top: 200px">
     <form method="POST" action ="/upload" enctype=multipart/form-data>
       Course Number:<br>
       <input type="text" name="CourseNum"><br>
@@ -14,7 +18,14 @@
       <input type="text" name="ExamTitle"><br>
       Semester:<br>
       <input type="text" name="Semester"><br>
+      <p>
+
+      </p>
       <input type=file name=inputFile>
+      <p>
+
+      </p>
       <input type=submit value=Submit>
     </form>
+  </div>
 {% endblock %}
