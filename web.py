@@ -297,11 +297,80 @@ def Mdisplay_exam():
     RSubject = request.form['RSubject']
     RExam_title = request.form['RExamTitle']
     RSemester = request.form['RSemester']
-    print (RCoursenum, RSubject, RExam_title, RSemester)
-    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
-                      FROM Exams E
-                      WHERE E.CourseNum = ? OR E.Subj = ? OR E.ExamTitle = ? OR E.Semester= ?""",(RCoursenum, RSubject, RExam_title, RSemester))
-    Rexams = cursor.fetchall()
+    if RSubject == '' and RExam_title == '' and RSemester == '' and RCoursenum == 0:
+        cursor.execute("""SELECT *
+                          FROM Exams """)
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RExam_title != '' and RSemester != '' and RCoursenum != 0:
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ?  AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RExam_title, RSemester))
+        Rexams = cursor.fetchall()
+    elif RSubject != '' and RExam_title == '' and RSemester == '' and RCoursenum == 0:
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Subj= '%s' """%(RSubject))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RExam_title == '' and RSemester == ''and RCoursenum != 0:
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = '%s' """%(RCoursenum))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RExam_title == '' and RCoursenum != 0 and RSemester != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ?  AND E.Semester = ?""",(RCoursenum, RSemester))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RExam_title == '' and RCoursenum == 0 and RSemester != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Semester = '%s'"""%(RSemester))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RCoursenum == 0 and RSemester != '' and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.ExamTitle = ? AND E.Semester = ?""",(RExam_title, RSemester))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RCoursenum == 0 and RSemester == '' and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.ExamTitle = '%s' """%(RExam_title))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RSemester == '' and RCoursenum != 0 and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ? AND E.ExamTitle = ? """,(RCoursenum,RExam_title))
+        Rexams = cursor.fetchall()
+    elif RSemester == '' and RCoursenum != 0 and RSubject != '' and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? """,(RCoursenum, RSubject, RExam_title))
+        Rexams = cursor.fetchall()
+    elif RSemester == '' and RCoursenum == 0 and RSubject != '' and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Subj = ? AND E.ExamTitle = ? """,(RSubject, RExam_title))
+        Rexams = cursor.fetchall()
+    elif RSemester == '' and RExam_title == '' and RCoursenum != 0 and RSubject != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RSubject))
+        Rexams = cursor.fetchall()
+    elif RExam_title == '' and RCoursenum == 0 and RSubject != '' and RSemester != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Subj = ?  AND E.Semester = ?""",(RSubject, RSemester))
+        Rexams = cursor.fetchall()
+    elif RCoursenum == 0 and RSemester != '' and RSubject != '' and RCoursenum != 0: 
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Subj = ? AND E.ExamTitle = ? AND E.Semester = ?""",(RSubject, RExam_title, RSemester))
+        Rexams = cursor.fetchall()
+    else:
+        cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
+                          FROM Exams E
+                          WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RSubject, RExam_title, RSemester))
+        Rexams = cursor.fetchall()
     return render_template('Mdisplay.html', Rexams=Rexams)
 
 @app.route('/ModifyB/<ID>', methods = ['POST', 'GET'])
