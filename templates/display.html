@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <table border = 1>
+     <thead>
+        <td>ExamID</td>
+        <td>Course Number</td>
+        <td>Subject</td>
+        <td>Exam Title</td>
+        <td>Semester</td>
+        <td>Download Button</td>
+     </thead>
+     {% for Rexam in Rexams %}
+        <tr>
+           <td>{{Rexam["ExamID"]}}</td>
+           <td>{{Rexam["CourseNum"]}}</td>
+           <td>{{Rexam["Subj"]}}</td>
+           <td>{{Rexam["ExamTitle"]}}</td>
+           <td>{{Rexam["Semester"]}}</td>
+           <td><a href="/return-file/{{Rexam["ExamID"]}}{{Rexam["Extension"]}}" target="blank"><button class ='btn btn-default'>Open File</button></a></td>
+        </tr>
+     {% endfor %}
+  </table>
+{% endblock %}

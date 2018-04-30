@@ -19,13 +19,73 @@ def home():
 def about():
     return render_template('about.html')
     
-@app.route('/student')
+@app.route('/register', methods = ['POST', 'GET'])
 def student():
-    return render_template('student.html')
+    return render_template('register.html')
 
-@app.route('/mod')
-def mod():
-    return render_template('mod.html')
+@app.route('/registered', methods = ['POST', 'GET'])
+def registered():
+    Accountid = request.form['un']
+    First= request.form['fn']
+    Middle = request.form['mn']
+    Last = request.form['ln']
+    Pass = request.form['pw']
+    Email = request.form['em']
+    University = request.form['uni']
+    Location = request.form['loc']
+    Stat = request.form['stat']
+    if Accountid == '' or First == '' or Last == '' or Pass == '' or Email == '':
+        flash('First name, Last name, Password, or Email can not be empty')
+        return render_template('register.html')
+    if University !='' and Location == '':
+        flash('Must provide a location for university')
+        return render_template('register.html')
+    connection = sqlite3.connect("data.db")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    cursor.execute("""INSERT INTO Users (AccountID,Email,Fname,Lname,Mname)
+    VALUES (?,?,?,?,?)""",(Accountid, Email, First, Last, Middle))
+    connection.commit()
+    cursor.execute("""INSERT INTO Uni (Uniname,Loc)
+    VALUES (?,?)""",(University,Location))
+    connection.commit()
+    cursor.execute("""INSERT INTO Attends (AccountID,Uniname,Stat)
+    VALUES (?,?,?)""",(Accountid, University, Stat))
+    connection.commit()
+    flash('Your Registration has been completed')
+    return render_template('login.html')
+
+
+@app.route('/login', methods = ['POST', 'GET'])
+def login():
+    return render_template('login.html')
+
+@app.route('/log', methods = ['POST', 'GET'])
+def log():
+    Accountid = request.form['UN']
+    connection = sqlite3.connect("data.db")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    cursor.execute("""SELECT U.AccountID
+                      FROM Users U
+                      WHERE  U.AccountID = '%s' """%(Accountid))
+    us = cursor.fetchone()
+    cursor.execute("""SELECT M.AccountID
+                      FROM Mod1 M
+                      WHERE M.AccountID = '%s' """%(Accountid))
+    mo = cursor.fetchone()
+    try:
+        if us['AccountID'] != "":
+            flash('You have successfully login')
+            return render_template('upload.html')
+    except:
+        try:
+            if mo['AccountID'] != "":
+                flash('You have successfully login')
+                return render_template('mupload.html')
+        except:
+            flash('Username not found or Password is incorrect')
+            return render_template('login.html')
 
 @app.route('/upload', methods = ['POST', 'GET'])
 def upload():
@@ -100,7 +160,7 @@ def display_exam():
     print (RCoursenum, RSubject, RExam_title, RSemester)
     cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
                       FROM Exams E
-                      WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester= ?""",(RCoursenum, RSubject, RExam_title, RSemester))
+                      WHERE E.CourseNum = ? OR E.Subj = ? OR E.ExamTitle = ? OR E.Semester= ?""",(RCoursenum, RSubject, RExam_title, RSemester))
     Rexams = cursor.fetchall()
     return render_template('display.html', Rexams=Rexams)
 
@@ -124,7 +184,7 @@ def Mdisplay_exam():
     print (RCoursenum, RSubject, RExam_title, RSemester)
     cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
                       FROM Exams E
-                      WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester= ?""",(RCoursenum, RSubject, RExam_title, RSemester))
+                      WHERE E.CourseNum = ? OR E.Subj = ? OR E.ExamTitle = ? OR E.Semester= ?""",(RCoursenum, RSubject, RExam_title, RSemester))
     Rexams = cursor.fetchall()
     return render_template('Mdisplay.html', Rexams=Rexams)
 
