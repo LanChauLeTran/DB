@@ -1,24 +1,37 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <table border = 1>
+  <head>
+    <style>
+    table, th, td {
+        border: 1px solid black;
+        empty-cells: hide;
+    }
+    
+    th, td {
+    padding: 15px;
+    }
+    </style>
+  </head>
+
+  <table style="margin-left: 300px">
      <thead>
-        <td>ExamID</td>
-        <td>Course Number</td>
-        <td>Subject</td>
-        <td>Exam Title</td>
-        <td>Semester</td>
-        <td>Download Button</td>
+        <td width="200px">ExamID</td>
+        <td width="200px">Course Number</td>
+        <td width="200px">Subject</td>
+        <td width="200px">Exam Title</td>
+        <td width="200px">Semester</td>
+        <td width="200px">Open</td>
      </thead>
      {% for Rexam in Rexams %}
-        <tr>
-           <td>{{Rexam["ExamID"]}}</td>
-           <td>{{Rexam["CourseNum"]}}</td>
-           <td>{{Rexam["Subj"]}}</td>
-           <td>{{Rexam["ExamTitle"]}}</td>
-           <td>{{Rexam["Semester"]}}</td>
-           <td><a href="/return-file/{{Rexam["ExamID"]}}{{Rexam["Extension"]}}" target="blank"><button class ='btn btn-default'>Open File</button></a></td>
-        </tr>
+      <tr>
+          <td>{{Rexam["ExamID"]}}</td>
+          <td>{{Rexam["CourseNum"]}}</td>
+          <td>{{Rexam["Subj"]}}</td>
+          <td>{{Rexam["ExamTitle"]}}</td>
+          <td>{{Rexam["Semester"]}}</td>
+          <td><a href="/return-file/{{Rexam["ExamID"]}}{{Rexam["Extension"]}}" target="blank"><button class ='btn btn-default'>Open File</button></a></td>
+      </tr>
      {% endfor %}
   </table>
 {% endblock %}
