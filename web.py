@@ -77,12 +77,12 @@ def log():
     try:
         if us['AccountID'] != "":
             flash('You have successfully login')
-            return render_template('upload.html')
+            return redirect("/upload")
     except:
         try:
             if mo['AccountID'] != "":
                 flash('You have successfully login')
-                return render_template('mupload.html')
+                return redirect("/mupload")
         except:
             flash('Username not found or Password is incorrect')
             return render_template('login.html')
@@ -135,6 +135,54 @@ def upload():
         connection.commit()
     return render_template('upload.html')
 
+@app.route('/mupload', methods = ['POST', 'GET'])
+def mupload():
+    connection = sqlite3.connect("data.db")
+    cursor = connection.cursor()
+    counter = 0
+    dot = -1
+    if 'inputFile' not in request.files:
+            flash('No selected file')
+            return render_template('upload.html')
+    file = request.files['inputFile']
+    CoursenumS = request.form['CourseNum']
+    if(CoursenumS ==''):
+        Coursenum = 0
+    else:
+        Coursenum = int(CoursenumS)
+    Subject = request.form['Subject']
+    Exam_title = request.form['ExamTitle']
+    Semester = request.form['Semester']
+ 
+    if (Coursenum == 0 or Subject == '' or Semester == ''):
+        flash('Course Number, Subject, or Semester can not be blank')
+    else:
+        Filename = secure_filename(file.filename)
+        for i in Filename:
+            if i == '.' :
+                dot = counter
+            else:
+                counter = counter + 1 
+        if(dot == -1):
+            flash('There is not extenstion for this file')
+            return render_template('mupload.html')
+        lstring = len(Filename)
+        Extension = Filename[(lstring - dot) * -1 :]
+        Ecount = 7
+        for i in ALLOWED_EXTENSIONS:
+            if i != Extension:
+                Ecount = Ecount - 1
+        if Ecount == 0:
+            flash('File type is not allow')
+            return render_template('mupload.html')
+        Filename1 = str(random.randint(1,999999999))
+        Filename2 = Filename1 + Extension
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], Filename2)) 
+        cursor.execute("""INSERT INTO Exams (ExamID,CourseNum,Subj,ExamTitle,Semester,Extension)
+        VALUES (?,?,?,?,?,?)""",(Filename1, Coursenum, Subject, Exam_title, Semester, Extension))
+        connection.commit()
+    return render_template('mupload.html')
+
 @app.route('/request', methods = ['POST', 'GET'])
 def request_exam():
     return render_template('request.html')
@@ -145,7 +193,6 @@ def modrequest_exam():
 
 @app.route('/display', methods = ['POST', 'GET'])
 def display_exam():
-    
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
@@ -157,11 +204,80 @@ def display_exam():
     RSubject = request.form['RSubject']
     RExam_title = request.form['RExamTitle']
     RSemester = request.form['RSemester']
-    print (RCoursenum, RSubject, RExam_title, RSemester)
-    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
-                      FROM Exams E
-                      WHERE E.CourseNum = ? OR E.Subj = ? OR E.ExamTitle = ? OR E.Semester= ?""",(RCoursenum, RSubject, RExam_title, RSemester))
-    Rexams = cursor.fetchall()
+    if RSubject == '' and RExam_title == '' and RSemester == '' and RCoursenum == 0:
+        cursor.execute("""SELECT *
+                          FROM Exams """)
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RExam_title != '' and RSemester != '' and RCoursenum != 0:
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ?  AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RExam_title, RSemester))
+        Rexams = cursor.fetchall()
+    elif RSubject != '' and RExam_title == '' and RSemester == '' and RCoursenum == 0:
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Subj= '%s' """%(RSubject))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RExam_title == '' and RSemester == ''and RCoursenum != 0:
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = '%s' """%(RCoursenum))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RExam_title == '' and RCoursenum != 0 and RSemester != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ?  AND E.Semester = ?""",(RCoursenum, RSemester))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RExam_title == '' and RCoursenum == 0 and RSemester != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Semester = '%s'"""%(RSemester))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RCoursenum == 0 and RSemester != '' and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.ExamTitle = ? AND E.Semester = ?""",(RExam_title, RSemester))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RCoursenum == 0 and RSemester == '' and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.ExamTitle = '%s' """%(RExam_title))
+        Rexams = cursor.fetchall()
+    elif RSubject == '' and RSemester == '' and RCoursenum != 0 and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ? AND E.ExamTitle = ? """,(RCoursenum,RExam_title))
+        Rexams = cursor.fetchall()
+    elif RSemester == '' and RCoursenum != 0 and RSubject != '' and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? """,(RCoursenum, RSubject, RExam_title))
+        Rexams = cursor.fetchall()
+    elif RSemester == '' and RCoursenum == 0 and RSubject != '' and RExam_title != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Subj = ? AND E.ExamTitle = ? """,(RSubject, RExam_title))
+        Rexams = cursor.fetchall()
+    elif RSemester == '' and RExam_title == '' and RCoursenum != 0 and RSubject != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RSubject))
+        Rexams = cursor.fetchall()
+    elif RExam_title == '' and RCoursenum == 0 and RSubject != '' and RSemester != '':
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Subj = ?  AND E.Semester = ?""",(RSubject, RSemester))
+        Rexams = cursor.fetchall()
+    elif RCoursenum == 0 and RSemester != '' and RSubject != '' and RCoursenum != 0: 
+        cursor.execute("""SELECT *
+                          FROM Exams E
+                          WHERE E.Subj = ? AND E.ExamTitle = ? AND E.Semester = ?""",(RSubject, RExam_title, RSemester))
+        Rexams = cursor.fetchall()
+    else:
+        cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
+                          FROM Exams E
+                          WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RSubject, RExam_title, RSemester))
+        Rexams = cursor.fetchall()
     return render_template('display.html', Rexams=Rexams)
 
 @app.route('/return-file/<ID>', methods=['GET', 'POST'])
