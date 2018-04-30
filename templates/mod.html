@@ -4,12 +4,11 @@
 
 {% block body %}
   <form action = "{{ url_for('upload') }}" method = "post">
-    ID:<br>
-    <input type="text" name="ID"><br>
+    ModId:<br>
+    <input type="text" name="ModId"><br>
     Password:<br>
-    <input type="text" name="Password"><br>
+    <input type="text" name="MPassword"><br>
     <input type="submit" value="Submit">
   </form> 
 
 {% endblock %}
-
