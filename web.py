@@ -143,7 +143,7 @@ def mupload():
     dot = -1
     if 'inputFile' not in request.files:
             flash('No selected file')
-            return render_template('upload.html')
+            return render_template('mupload.html')
     file = request.files['inputFile']
     CoursenumS = request.form['CourseNum']
     if(CoursenumS ==''):
@@ -427,17 +427,17 @@ def delete(ID):
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
-    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
-                      FROM Exams E
-                      WHERE E.ExamID = %s"""%(ID))
-    Dexam = cursor.fetchone()
-    cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
-                      FROM Exams E
-                      WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester= ? AND E.ExamID != ?""",(Dexam["CourseNum"], Dexam["Subj"], Dexam["Examtitle"], Dexam["Semester"], ID))
+    cursor.execute("""SELECT *
+                      FROM Exams E""")
     Rexams = cursor.fetchall()
     cursor.execute("""DELETE FROM Exams
-                      WHERE Exams.ExamID = %s"""%(ID))
-    connection.commit()
+                      WHERE Exams.ExamID = '%s'"""%(ID))
+    connection.commit() 
+    cursor.execute("""SELECT *
+                      FROM Exams E""")
+    Rexams = cursor.fetchall()
+    
+
     return render_template('Mdisplay.html', Rexams=Rexams)
 
 app.run()
