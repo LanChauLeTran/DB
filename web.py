@@ -19,14 +19,6 @@ def home():
 def student():
     return render_template('student.html')
 
-@app.route('/studentinfo', methods=['POST'])
-def studentinfo():
-    name = request.form['Name']
-    id = request.form['ID']
-    print(name + id)
-    return render_template('studentinfo.html', name=name)
-
-
 @app.route('/upload', methods = ['POST', 'GET'])
 def upload():
     connection = sqlite3.connect("data.db")
