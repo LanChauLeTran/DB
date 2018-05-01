@@ -43,16 +43,31 @@ def registered():
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
-    cursor.execute("""INSERT INTO Users (AccountID,Email,Fname,Lname,Mname)
-    VALUES (?,?,?,?,?)""",(Accountid, Email, First, Last, Middle))
-    connection.commit()
-    cursor.execute("""INSERT INTO Uni (Uniname,Loc)
-    VALUES (?,?)""",(University,Location))
-    connection.commit()
+    try:
+        cursor.execute("""SELECT *
+                      FROM Users U
+                      WHERE  U.AccountID = '%s' """%(Accountid))
+        no = cursor.fetchone()
+        if no["AccountID"] != '':
+            return redirect("/register")
+    except:
+        cursor.execute("""INSERT INTO Users (AccountID,Email,Fname,Lname,Mname)
+        VALUES (?,?,?,?,?)""",(Accountid, Email, First, Last, Middle))
+        connection.commit()
+    try:
+        cursor.execute("""SELECT U.UniName
+                      FROM Uni U
+                      WHERE  U.UniName = '%s' """%(University))
+        ok = cursor.fetchone()
+        if ok["UniName"] != '':
+            print("Uni already in table")
+    except:
+        cursor.execute("""INSERT INTO Uni (Uniname,Loc)
+        VALUES (?,?)""",(University,Location))
+        connection.commit()
     cursor.execute("""INSERT INTO Attends (AccountID,Uniname,Stat)
     VALUES (?,?,?)""",(Accountid, University, Stat))
     connection.commit()
-    flash('Your Registration has been completed')
     return render_template('login.html')
 
 
@@ -97,7 +112,6 @@ def upload():
     counter = 0
     dot = -1
     if 'inputFile' not in request.files:
-            flash('No selected file')
             return render_template('upload.html')
     file = request.files['inputFile']
     CoursenumS = request.form['CourseNum']
@@ -108,8 +122,8 @@ def upload():
     Subject = request.form['Subject']
     Exam_title = request.form['ExamTitle']
     Semester = request.form['Semester']
- 
-    if (Coursenum == 0 or Subject == '' or Semester == ''):
+    AccountID = request.form['AccountID']
+    if (Coursenum == 0 or Subject == '' or Semester == '' or AccountID == ''):
         flash('Course Number, Subject, or Semester can not be blank')
     else:
         Filename = secure_filename(file.filename)
@@ -135,6 +149,20 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], Filename2)) 
         cursor.execute("""INSERT INTO Exams (ExamID,CourseNum,Subj,ExamTitle,Semester,Extension)
         VALUES (?,?,?,?,?,?)""",(Filename1, Coursenum, Subject, Exam_title, Semester, Extension))
+        connection.commit()
+    cursor.execute("""SELECT *
+                  FROM Base2 
+                  WHERE  Base2.AccountID = '%s' """%(AccountID))
+    no = cursor.fetchone()
+    if no["AccountID"] != '':
+        cursor.execute("""INSERT INTO Base2 (AccountID,ExamsSubmitted)
+        VALUES (?,?)""",(AccountID,1))
+        connection.commit()
+    else:
+        nup = no["AccountID"]
+        nup = nup + 1
+        cursor.execute("""INSERT INTO Base2 (AccountID,ExamsSubmitted)
+        VALUES (?,?)""",(AccountID,nup))
         connection.commit()
     return render_template('upload.html')
 
@@ -378,7 +406,6 @@ def Mdisplay_exam():
 
 @app.route('/ModifyB/<ID>', methods = ['POST', 'GET'])
 def ModifyB(ID):
-    print(ID)
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
@@ -390,7 +417,6 @@ def ModifyB(ID):
 
 @app.route('/Modify/<ID>', methods = ['POST', 'GET'])
 def Modify(ID):
-    print(ID)
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
@@ -411,8 +437,6 @@ def Modify(ID):
     if(Semester ==''):
         Semester = Rexam["Semester"]
     Extension = Rexam["Extension"]
-    print('ASDASDASDHASJDHASKJ')
-    print(Rexam["Subj"])
     cursor.execute("""DELETE FROM Exams
                     WHERE Exams.ExamID = %s""" % (ID))
     connection.commit()
@@ -420,8 +444,7 @@ def Modify(ID):
     VALUES (?,?,?,?,?,?)""",(ID, CoursenumS, Subject, Exam_title, Semester, Extension))
     connection.commit()
     cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
-                FROM Exams E
-                WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester= ?""",(CoursenumS, Subject, Exam_title, Semester))
+                FROM Exams E""")
     Rexams = cursor.fetchall()
     return render_template('Mdisplay.html', Rexams=Rexams)
 
