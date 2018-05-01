@@ -11,6 +11,9 @@ app = Flask('DataBase')
 app.secret_key = 'secret'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# This file create each individual webpage for our the projec by rendering the HTML that we 
+# wrote in order to output the information we want
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -25,6 +28,7 @@ def student():
 
 @app.route('/registered', methods = ['POST', 'GET'])
 def registered():
+    # Creating forms for user registration
     Accountid = request.form['un']
     First= request.form['fn']
     Middle = request.form['mn']
@@ -34,12 +38,16 @@ def registered():
     University = request.form['uni']
     Location = request.form['loc']
     Stat = request.form['stat']
+
+    # Error checking for empty user input 
     if Accountid == '' or First == '' or Last == '' or Pass == '' or Email == '':
         flash('First name, Last name, Password, or Email can not be empty')
         return render_template('register.html')
     if University !='' and Location == '':
         flash('Must provide a location for university')
         return render_template('register.html')
+
+    # connect user inputs to database in order to create a new entry within the database
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
@@ -67,7 +75,9 @@ def registered():
         connection.commit()
     cursor.execute("""INSERT INTO Attends (AccountID,Uniname,Stat)
     VALUES (?,?,?)""",(Accountid, University, Stat))
+    # insert data into database
     connection.commit()
+    # redirects to login when registration is successful
     return render_template('login.html')
 
 @app.route('/login', methods = ['POST', 'GET'])
@@ -76,8 +86,13 @@ def login():
 
 @app.route('/log', methods = ['POST', 'GET'])
 def log():
+    # create form for user to log in
     Accountid = request.form['UN']
     Password = request.form['PW']
+
+    # ensure user is within the database to log in
+    # also query the database to check if the user is a basic user or a mod
+    # redirects the user to the correct upload page based on user type
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
@@ -104,10 +119,13 @@ def log():
 
 @app.route('/upload', methods = ['POST', 'GET'])
 def upload():
+    # connect to database in order to insert 
     connection = sqlite3.connect("data.db")
     cursor = connection.cursor()
     counter = 0
     dot = -1
+    # form for user input
+    # checks that each input
     if 'inputFile' not in request.files:
             return render_template('upload.html')
     file = request.files['inputFile']
@@ -120,9 +138,13 @@ def upload():
     Exam_title = request.form['ExamTitle']
     Semester = request.form['Semester']
     ACCID = request.form['ACCID']
+    # if informations are left blank, the users will be redirected back to upload
+    # as these information cannot be blank, and the exam will not be added
     if (Coursenum == 0 or Subject == '' or Semester == ''or ACCID =='' or CoursenumS ==''):
         flash('Course Number, Subject, or Semester can not be blank')
         return redirect('/upload')
+    # if all information are inputted, the exam will be added to the database
+    # they will still be redirected back to the upload to submit another exam
     else:
         Filename = secure_filename(file.filename)
         for i in Filename:
@@ -172,7 +194,12 @@ def upload():
     return render_template('upload.html')
 
 @app.route('/mupload', methods = ['POST', 'GET'])
+# this fuction is almost identical to upload, but for mods. 
+# this double fuctionality is to differentiate between the users
+# and be able to direct mods to different areas that are not accessible 
+# by normal users. Submittin exams and inserting is the same as upload
 def mupload():  
+    # connect to database
     connection = sqlite3.connect("data.db")
     cursor = connection.cursor()
     counter = 0
@@ -241,6 +268,7 @@ def mupload():
         connection.commit()
     return render_template('mupload.html')
 
+# these two request functions let users input information about exams 
 @app.route('/request', methods = ['POST', 'GET'])
 def request_exam():
     return render_template('request.html')
@@ -250,10 +278,14 @@ def modrequest_exam():
     return render_template('modrequest.html')
 
 @app.route('/display', methods = ['POST', 'GET'])
+# this is the display for normal users
 def display_exam():
+    # connect to database
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
+    # get the information the users are searching for via the form
+    # from request.html
     RCoursenumS = request.form['RCourseNum']
     if(RCoursenumS ==''):
         RCoursenum = 0
@@ -262,6 +294,7 @@ def display_exam():
     RSubject = request.form['RSubject']
     RExam_title = request.form['RExamTitle']
     RSemester = request.form['RSemester']
+    # query for what the user is looking for within the database
     if RSubject == '' and RExam_title == '' and RSemester == '' and RCoursenum == 0:
         cursor.execute("""SELECT *
                           FROM Exams """)
@@ -343,6 +376,8 @@ def return_file(ID):
     return send_file(os.path.join(app.root_path, 'downloads', ID))
 
 @app.route('/displaymod', methods = ['POST', 'GET'])
+# identical to /display
+# however, the mod will be able to modify or delete exams from the database
 def Mdisplay_exam():    
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
@@ -432,7 +467,9 @@ def Mdisplay_exam():
     return render_template('Mdisplay.html', Rexams=Rexams)
 
 @app.route('/ModifyB/<ID>', methods = ['POST', 'GET'])
+# if mods decide to modify an exam they will be asked for new inputs
 def ModifyB(ID):
+    # this will display the exam the moderator decide to modify and allow them to input new data
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
@@ -443,6 +480,7 @@ def ModifyB(ID):
     return render_template('ModifyB.html', Rexams=Rexams)
 
 @app.route('/Modify/<ID>', methods = ['POST', 'GET'])
+# once mods entered new data this will execute the chagnes
 def Modify(ID):
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
@@ -452,6 +490,7 @@ def Modify(ID):
                       WHERE E.ExamId = %s"""%(ID))
     Rexam = cursor.fetchone()
     CoursenumS = request.form['CourseNum']
+    # check each new input and update the database
     if(CoursenumS ==''):
         CoursenumS = Rexam["CourseNum"]
     Subject = request.form['Subject']
@@ -473,9 +512,13 @@ def Modify(ID):
     cursor.execute("""SELECT E.ExamID, E.CourseNum, E.Subj, E.ExamTitle, E.Semester, E.Extension
                 FROM Exams E""")
     Rexams = cursor.fetchall()
+    # redirect to view the updated changes
     return render_template('Mdisplay.html', Rexams=Rexams)
 
 @app.route('/delete/<ID>', methods = ['POST', 'GET'])
+# if mods want to delete an exam, they will select it and 
+# the page will redirect to a page of all exams which will 
+# no longer have the one they just deleted
 def delete(ID):
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
@@ -489,11 +532,11 @@ def delete(ID):
     cursor.execute("""SELECT *
                       FROM Exams E""")
     Rexams = cursor.fetchall()
-    
 
     return render_template('Mdisplay.html', Rexams=Rexams)
 
 @app.route('/NumbersExam', methods = ['POST', 'GET'])
+# let users view how many exams each users have submitted
 def Numbers_of_Exam():
     connection = sqlite3.connect("data.db")
     connection.row_factory = sqlite3.Row
