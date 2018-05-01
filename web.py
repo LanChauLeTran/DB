@@ -157,12 +157,11 @@ def upload():
                   WHERE  Base2.AccountID = '%s' """%(ACCID))
     yo = cursor.fetchone()
     Start = 1
-    print (no)
-    try:
+    if(not (no)):
         cursor.execute("""INSERT INTO Base2 (AccountID,ExamsSubmitted)
         VALUES (?,?)""",(ACCID,Start))
         connection.commit()
-    except:
+    else:
         nub = yo[0]
         nub = nub + 1
         cursor.execute("""UPDATE Base2 
@@ -226,14 +225,12 @@ def mupload():
                   WHERE  Base2.AccountID = '%s' """%(ACCID))
     yo = cursor.fetchone()
     Start = 1
-    print (no)
-    try:
-        print("LOOP")
+
+    if(not(no)):
         cursor.execute("""INSERT INTO Base2 (AccountID,ExamsSubmitted)
         VALUES (?,?)""",(ACCID,Start))
         connection.commit()
-    except:
-        print("ASDJASDJASDJHASJH")
+    else:
         nub = yo[0]
         nub = nub + 1
         cursor.execute("""UPDATE Base2 
