@@ -30,7 +30,7 @@ connection.commit()####################################################
 
 cursor.execute('CREATE TABLE IF NOT EXISTS [Base2]('###################################
         'AccountID      varchar         REFERENCES Users(AccountiD),'
-        'ExamsSubmitted varchar         REFERENCES EXAMS(ExamID)    ,'
+        'ExamsSubmitted int         REFERENCES EXAMS(ExamID)    ,'
         'PRIMARY KEY(AccountiD, ExamsSubmitted)                     '
         ');')
 connection.commit()#####################################################
