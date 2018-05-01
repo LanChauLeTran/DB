@@ -84,16 +84,6 @@ connection.commit()####################################################
 
 
 #################### START OF INSERTING DATA ##########################
-
-### Insert into Exams ##### 
-cursor.execute('INSERT INTO Exams VALUES ("123456789", 1222 , "Math", "Calc 2 Exam 1", "Spring 2016","pdf")')  
-connection.commit()
-
-cursor.execute('INSERT INTO Exams VALUES ("000000000", 1120, "English", "Eng 1 Midterms", "Fall 2017","pdf")')
-connection.commit()
-
-cursor.execute('INSERT INTO Exams VALUES ("987654321", 2135, "Physics", "Physics 2 Exam 2", "Spring 2018","pdf")')
-connection.commit()
 ###########################################################################################################
 cursor.execute('INSERT INTO Users VALUES ("111111111", "Johnny@gmail.com", "Johnathan", "Smith", NULL)')
 connection.commit()
@@ -113,14 +103,6 @@ connection.commit()
 cursor.execute('INSERT INTO Base1 VALUES ("333333333", 2018-06-09)')
 connection.commit()
 ###########################################################################################################
-cursor.execute('INSERT INTO Base2 VALUES ("111111111", "000000000")')
-connection.commit()
-
-cursor.execute('INSERT INTO Base2 VALUES ("111111111", "123456789")')
-connection.commit()
-
-cursor.execute('INSERT INTO Base2 VALUES ("222222222", "987654321")')
-connection.commit()
 ###########################################################################################################
 cursor.execute('INSERT INTO Mod1 VALUES ("123123123", 2018-01-01, "101010101")')
 connection.commit()

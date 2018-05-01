@@ -70,7 +70,6 @@ def registered():
     connection.commit()
     return render_template('login.html')
 
-
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
     return render_template('login.html')
@@ -94,12 +93,10 @@ def log():
         return redirect("login")
     try:
         if us['AccountID'] != "":
-            flash('You have successfully login')
             return redirect("/upload")
     except:
         try:
             if mo['AccountID'] != "":
-                flash('You have successfully login')
                 return redirect("/mupload")
         except:
             flash('Username not found or Password is incorrect')
@@ -122,9 +119,10 @@ def upload():
     Subject = request.form['Subject']
     Exam_title = request.form['ExamTitle']
     Semester = request.form['Semester']
-    AccountID = request.form['AccountID']
-    if (Coursenum == 0 or Subject == '' or Semester == '' or AccountID == ''):
+    ACCID = request.form['ACCID']
+    if (Coursenum == 0 or Subject == '' or Semester == ''or ACCID =='' or CoursenumS ==''):
         flash('Course Number, Subject, or Semester can not be blank')
+        return redirect('/upload')
     else:
         Filename = secure_filename(file.filename)
         for i in Filename:
@@ -150,30 +148,36 @@ def upload():
         cursor.execute("""INSERT INTO Exams (ExamID,CourseNum,Subj,ExamTitle,Semester,Extension)
         VALUES (?,?,?,?,?,?)""",(Filename1, Coursenum, Subject, Exam_title, Semester, Extension))
         connection.commit()
-    cursor.execute("""SELECT *
+    cursor.execute("""SELECT Base2.AccountID
                   FROM Base2 
-                  WHERE  Base2.AccountID = '%s' """%(AccountID))
+                  WHERE  Base2.AccountID = '%s' """%(ACCID))
     no = cursor.fetchone()
-    if no["AccountID"] != '':
+    cursor.execute("""SELECT Base2.ExamsSubmitted
+                  FROM Base2 
+                  WHERE  Base2.AccountID = '%s' """%(ACCID))
+    yo = cursor.fetchone()
+    Start = 1
+    print (no)
+    try:
         cursor.execute("""INSERT INTO Base2 (AccountID,ExamsSubmitted)
-        VALUES (?,?)""",(AccountID,1))
+        VALUES (?,?)""",(ACCID,Start))
         connection.commit()
-    else:
-        nup = no["AccountID"]
-        nup = nup + 1
-        cursor.execute("""INSERT INTO Base2 (AccountID,ExamsSubmitted)
-        VALUES (?,?)""",(AccountID,nup))
+    except:
+        nub = yo[0]
+        nub = nub + 1
+        cursor.execute("""UPDATE Base2 
+                          SET ExamsSubmitted = '%s'
+                          Where  AccountID = '%s'"""%(nub,ACCID))
         connection.commit()
     return render_template('upload.html')
 
 @app.route('/mupload', methods = ['POST', 'GET'])
-def mupload():
+def mupload():  
     connection = sqlite3.connect("data.db")
     cursor = connection.cursor()
     counter = 0
     dot = -1
     if 'inputFile' not in request.files:
-            flash('No selected file')
             return render_template('mupload.html')
     file = request.files['inputFile']
     CoursenumS = request.form['CourseNum']
@@ -184,9 +188,10 @@ def mupload():
     Subject = request.form['Subject']
     Exam_title = request.form['ExamTitle']
     Semester = request.form['Semester']
- 
-    if (Coursenum == 0 or Subject == '' or Semester == ''):
+    ACCID = request.form['ACCID']
+    if (Coursenum == 0 or Subject == '' or Semester == ''or ACCID =='' or CoursenumS ==''):
         flash('Course Number, Subject, or Semester can not be blank')
+        return redirect('/mupload')
     else:
         Filename = secure_filename(file.filename)
         for i in Filename:
@@ -211,6 +216,29 @@ def mupload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], Filename2)) 
         cursor.execute("""INSERT INTO Exams (ExamID,CourseNum,Subj,ExamTitle,Semester,Extension)
         VALUES (?,?,?,?,?,?)""",(Filename1, Coursenum, Subject, Exam_title, Semester, Extension))
+        connection.commit()
+    cursor.execute("""SELECT Base2.AccountID
+                  FROM Base2 
+                  WHERE  Base2.AccountID = '%s' """%(ACCID))
+    no = cursor.fetchone()
+    cursor.execute("""SELECT Base2.ExamsSubmitted
+                  FROM Base2 
+                  WHERE  Base2.AccountID = '%s' """%(ACCID))
+    yo = cursor.fetchone()
+    Start = 1
+    print (no)
+    try:
+        print("LOOP")
+        cursor.execute("""INSERT INTO Base2 (AccountID,ExamsSubmitted)
+        VALUES (?,?)""",(ACCID,Start))
+        connection.commit()
+    except:
+        print("ASDJASDJASDJHASJH")
+        nub = yo[0]
+        nub = nub + 1
+        cursor.execute("""UPDATE Base2 
+                          SET ExamsSubmitted = '%s'
+                          WHERE  AccountID = '%s'"""%(nub,ACCID))
         connection.commit()
     return render_template('mupload.html')
 
@@ -466,4 +494,13 @@ def delete(ID):
 
     return render_template('Mdisplay.html', Rexams=Rexams)
 
+@app.route('/NumbersExam', methods = ['POST', 'GET'])
+def Numbers_of_Exam():
+    connection = sqlite3.connect("data.db")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    cursor.execute("""SELECT *
+                      FROM Base2 """)
+    Exams = cursor.fetchall()
+    return render_template("NoExams.html", Exams=Exams)
 app.run()
