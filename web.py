@@ -228,7 +228,6 @@ def mupload():
     Start = 1
     print (no)
     try:
-        print("LOOP")
         cursor.execute("""INSERT INTO Base2 (AccountID,ExamsSubmitted)
         VALUES (?,?)""",(ACCID,Start))
         connection.commit()

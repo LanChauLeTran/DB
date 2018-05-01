@@ -34,6 +34,8 @@
 </table>
     
 {% for Rexam in Rexams %}
+<div style="margin-left: 225px">
+    <p>&nbsp;</p>
     <form method="POST" action ="/Modify/{{Rexam["ExamID"]}}" enctype=multipart/form-data>
         Course Number:<br>
         <input type="text" name="CourseNum"><br>
@@ -43,7 +45,8 @@
         <input type="text" name="ExamTitle"><br>
         Semester:<br>
         <input type="text" name="Semester"><br>
-         <input type=submit value=Submit>
+        <input type=submit value=Submit>
     </form>
+</div>
 {% endfor %}
 {% endblock %}
