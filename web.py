@@ -241,11 +241,22 @@ def mupload():
 
 @app.route('/request', methods = ['POST', 'GET'])
 def request_exam():
-    return render_template('request.html')
+    connection = sqlite3.connect("data.db")
+    cursor = connection.cursor()
+    cursor.execute("""SELECT COUNT(ExamID)
+                          FROM Exams E""")
+    Rexams = cursor.fetchall()
+    return render_template('request.html', Rexams=Rexams )
 
 @app.route('/modrequest', methods = ['POST', 'GET'])
 def modrequest_exam():
-    return render_template('modrequest.html')
+    connection = sqlite3.connect("data.db")
+    cursor = connection.cursor()
+    cursor.execute("""SELECT COUNT(ExamID)
+                          FROM Exams E""")
+    Rexams = cursor.fetchall()
+
+    return render_template('modrequest.html', Rexams=Rexams)
 
 @app.route('/display', methods = ['POST', 'GET'])
 def display_exam():
@@ -266,18 +277,18 @@ def display_exam():
         Rexams = cursor.fetchall()
     elif RSubject == '' and RExam_title != '' and RSemester != '' and RCoursenum != 0:
         cursor.execute("""SELECT *
-                          FROM Exams E
-                          WHERE E.CourseNum = ?  AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RExam_title, RSemester))
+                        FROM Exams E
+                        WHERE E.CourseNum = ?  AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RExam_title, RSemester))
         Rexams = cursor.fetchall()
     elif RSubject != '' and RExam_title == '' and RSemester == '' and RCoursenum == 0:
         cursor.execute("""SELECT *
-                          FROM Exams E
-                          WHERE E.Subj= '%s' """%(RSubject))
+                        FROM Exams E
+                        WHERE E.Subj= '%s' """%(RSubject))
         Rexams = cursor.fetchall()
     elif RSubject == '' and RExam_title == '' and RSemester == ''and RCoursenum != 0:
         cursor.execute("""SELECT *
-                          FROM Exams E
-                          WHERE E.CourseNum = '%s' """%(RCoursenum))
+                        FROM Exams E
+                        WHERE E.CourseNum = '%s' """%(RCoursenum))
         Rexams = cursor.fetchall()
     elif RSubject == '' and RExam_title == '' and RCoursenum != 0 and RSemester != '':
         cursor.execute("""SELECT *
@@ -317,7 +328,7 @@ def display_exam():
     elif RSemester == '' and RExam_title == '' and RCoursenum != 0 and RSubject != '':
         cursor.execute("""SELECT *
                           FROM Exams E
-                          WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RSubject))
+                          WHERE E.CourseNum = ? AND E.Subj = ? """,(RCoursenum, RSubject))
         Rexams = cursor.fetchall()
     elif RExam_title == '' and RCoursenum == 0 and RSubject != '' and RSemester != '':
         cursor.execute("""SELECT *
@@ -410,7 +421,7 @@ def Mdisplay_exam():
     elif RSemester == '' and RExam_title == '' and RCoursenum != 0 and RSubject != '':
         cursor.execute("""SELECT *
                           FROM Exams E
-                          WHERE E.CourseNum = ? AND E.Subj = ? AND E.ExamTitle = ? AND E.Semester = ?""",(RCoursenum, RSubject))
+                          WHERE E.CourseNum = ? AND E.Subj = ? """,(RCoursenum, RSubject))
         Rexams = cursor.fetchall()
     elif RExam_title == '' and RCoursenum == 0 and RSubject != '' and RSemester != '':
         cursor.execute("""SELECT *

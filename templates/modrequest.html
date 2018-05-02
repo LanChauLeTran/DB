@@ -3,7 +3,12 @@
 {% block body %}
   <div style="float: right; margin-right: 200px">
     <h3>
-      Enter the requested information to search for desired exam.
+      Enter the requested information to search for desired exam.<br>
+
+      Total Number of Exams in the Database:
+      {% for Rexam in Rexams %}
+        {{Rexam[0]}}
+      {% endfor %}
     </h3>
   </div>
   
