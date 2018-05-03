@@ -1,7 +1,7 @@
-{% extends 'layout.html' %}
+{% extends 'modlayout.html' %}
 
 {% block body %}
-  <div style="float: right; margin-right: 200px">
+  <div style="margin-left: 250px; margin-top: 150px">
     <h3>
       Enter the requested information to search for desired exam.<br>
 
@@ -12,7 +12,8 @@
     </h3>
   </div>
   
-  <div style="margin-left: 250px; margin-top:300px">
+  <!-- search for mods -->
+  <div style="margin-left: 250px; margin-top:10px">
     <form method="POST" action ="/displaymod" enctype=multipart/form-data>
       Course Number:<br>
       <input type="text" name="RCourseNum"><br>

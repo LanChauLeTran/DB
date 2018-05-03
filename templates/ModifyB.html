@@ -1,13 +1,26 @@
-{% extends 'layout.html' %}
+{% extends 'modlayout.html' %}
 
 {% block body %}
-<table border = 1>
+<head>
+    <style>
+    table, th, td {
+        border: 1px solid black;
+        empty-cells: hide;
+    }
+
+    th, td {
+        padding: 15px;
+    }
+    </style>
+</head>
+
+<table style="margin-left: 225px">
     <thead>
-       <td>ExamID</td>
-       <td>Course Number</td>
-       <td>Subject</td>
-       <td>Exam Title</td>
-       <td>Semester</td>
+       <td width="200px">ExamID</td>
+       <td width="200px">Course Number</td>
+       <td width="200px">Subject</td>
+       <td width="200px">Exam Title</td>
+       <td width="200px">Semester</td>
     </thead>
     {% for Rexam in Rexams %}
     <tr>
@@ -21,6 +34,8 @@
 </table>
     
 {% for Rexam in Rexams %}
+<div style="margin-left: 225px">
+    <p>&nbsp;</p>
     <form method="POST" action ="/Modify/{{Rexam["ExamID"]}}" enctype=multipart/form-data>
         Course Number:<br>
         <input type="text" name="CourseNum"><br>
@@ -30,7 +45,8 @@
         <input type="text" name="ExamTitle"><br>
         Semester:<br>
         <input type="text" name="Semester"><br>
-         <input type=submit value=Submit>
+        <input type=submit value=Submit>
     </form>
+</div>
 {% endfor %}
 {% endblock %}

@@ -85,14 +85,6 @@ connection.commit()####################################################
 
 #################### START OF INSERTING DATA ##########################
 ###########################################################################################################
-cursor.execute('INSERT INTO Users VALUES ("111111111", "Johnny@gmail.com", "Johnathan", "Smith", NULL)')
-connection.commit()
-
-cursor.execute('INSERT INTO Users VALUES ("222222222", "Jeff@gmail.com", "Jeff", "Bezos", "J")')
-connection.commit()
-
-cursor.execute('INSERT INTO Users VALUES ("333333333", "Anne@gmail.com", "Anne", "Winters", "O")')
-connection.commit()
 ###########################################################################################################
 cursor.execute('INSERT INTO Base1 VALUES ("111111111", 2018-04-20)')
 connection.commit()

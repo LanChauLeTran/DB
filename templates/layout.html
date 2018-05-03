@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- CSS and HTML for the fixed navigation bar across all -->
 <html>
     <head>
     <style>
@@ -62,6 +63,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
     
+    <!-- warnings -->
     <body bgcolor="#ffffe6">
         <link rel="stylesheet" href="topnav.css">
         <div class="topnav">
@@ -78,10 +80,9 @@
               {% endfor %}
             {% endif %}
         {% endwith %}
-    
         </div> 
-        
-
+    
+        <!-- Navigation menu -->
     <body bgcolor="white">
         <div class="navhead">EXAM ARCHIVE SYSTEM</div>
         <ul class="navcontainer">
@@ -102,6 +103,10 @@
             margin-top: 150px;
         }
     </style>
+
+    <!-- mod menu will be added here from modlayout.html -->
+    {% block menu %}
+    {% endblock %}
 
     <div class = "alignment">          
         {% block body %}

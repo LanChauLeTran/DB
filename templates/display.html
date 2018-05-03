@@ -1,5 +1,7 @@
 {% extends 'layout.html' %}
 
+<!-- Formatting of how the data will be displayed once queried-->
+
 {% block body %}
   <head>
     <style>
@@ -14,7 +16,7 @@
     </style>
   </head>
 
-  <table style="margin-left: 300px">
+  <table style="margin-left: 360px">
      <thead>
         <td width="200px">ExamID</td>
         <td width="200px">Course Number</td>
@@ -23,6 +25,8 @@
         <td width="200px">Semester</td>
         <td width="200px">Open File</td>
      </thead>
+     
+     <!-- output the queried data -->
      {% for Rexam in Rexams %}
       <tr>
           <td>{{Rexam["ExamID"]}}</td>
